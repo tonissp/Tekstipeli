@@ -16,10 +16,24 @@ class Player(startingArea: Area) {
   /** Attempts to move the player in the given direction. This is successful if there
     * is an exit from the player's current location towards the direction name. Returns
     * a description of the result: "You go DIRECTION." or "You can't go DIRECTION." */
-  def go(direction: String) = {
+  def go(direction: String):String = {
+    val canPass:Boolean = {
+      if(this.location.requirements.isEmpty)true else{
+        val req = this.location.requirements.get
+        if(req._2!=direction||this.has(req._1))true else false
+      }
+    }
+    if(canPass||this.location.neighbor(direction).isEmpty){
     val destination = this.location.neighbor(direction)
     this.currentLocation = destination.getOrElse(this.currentLocation)
-    if (destination.isDefined) "You go " + direction + "." else "You can't go " + direction + "."
+    if (destination.isDefined) "You go " + direction + "." else "You can't go " + direction + "."}else{"You need a "+ this.location.requirements.get._1}
+  }
+  def get(itemName:String):String={
+    val itemToGet = this.currentLocation.removeItem(itemName)
+
+    if(itemToGet.isDefined){
+      this.items += itemName -> itemToGet.get
+      s"You pick up the ${itemName}."} else {s"There is no ${itemName} here to pick up."}
   }
   /** Causes the player to rest for a short while (this has no substantial effect in game terms).
     * Returns a description of what happened. */
