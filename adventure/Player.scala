@@ -26,7 +26,7 @@ class Player(startingArea: Area) {
     if(canPass||this.location.neighbor(direction).isEmpty){
     val destination = this.location.neighbor(direction)
     this.currentLocation = destination.getOrElse(this.currentLocation)
-    if (destination.isDefined) "You go " + direction + "." else "You can't go " + direction + "."}else{"You need a "+ this.location.requirements.get._1 + "to pass"}
+    if (destination.isDefined) "You go " + direction + "." else "You can't go " + direction + "."}else{"You need a "+ this.location.requirements.get._1 + " to pass."}
   }
   def get(itemName:String):String={
     val itemToGet = this.currentLocation.removeItem(itemName)
