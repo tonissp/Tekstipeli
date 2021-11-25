@@ -77,7 +77,7 @@ ballroomNorth.setNeighbors(Vector( "east" -> wc, "south" -> ballroomSouth, "west
 ballroomSouth.setNeighbors(Vector( "north" -> eastWall, "east" -> frontGate, "south" -> thickGardenEast, "west" -> entrance))
 entrance.setNeighbors(Vector( "east" -> hallway, "south" -> frontYard, "west" -> stairs))
 hallway.setNeighbors(Vector( "north" -> kitchen, "east" -> entrance, "west" -> stairs))
-stairs.setNeighbors(Vector( "up" -> guestRoom, "down" -> wineCellar))
+stairs.setNeighbors(Vector( "up" -> guestRoom, "down" -> wineCellar, "east" ->hallway))
 wineCellar.setNeighbors(Vector( "up" -> stairs, "south" -> underground3))
 guestRoom.setNeighbors(Vector( "northwest" -> hallway2nd, "northeast" -> playroom, "east" -> workroom, "down" -> stairs))
 hallway2nd.setNeighbors(Vector( "west" -> toilet2nd, "east" -> playroom, "south" -> guestRoom))
