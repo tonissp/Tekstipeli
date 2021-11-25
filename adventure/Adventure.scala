@@ -91,16 +91,22 @@ pipe.setNeighbors(Vector( "up" -> childroom, "down" -> northFence))
 
 
 
-// TODO: place these two items in clearing and southForest, respectively
-storageShed.addItem(new Item("crowbar", "It's a rusty crowbar. Could maybe break down a door."))
-storageShed.addItem(new Item("rat poison", "A small vial of rat poison. Drinking the whole vial would be lethal for even a human."))
-
+storageShed.addItem(new Item("crowbar", "It's a small battery cell. Looks new."))
 workroom.addItem(new Item("loaded memory stick", "It's the remote control for your TV.\nWhat it was doing in the forest, you have no idea.\nProblem is, there's no battery."))
+  frontGate.addItem(new Item("suit and invitation", "useful"))
 
 val headGuard = new Guard("Head Guard", this)
+val target = new Target("Target", this)
+val child = new Child("Child", this)
+
+  val guests = new People(Vector(yardEntrance, frontYard, eastWall, entrance, ballroomSouth, ballroomNorth, toiletRoom), "Suit and invitation")
+
+
 
 /** The character that the player controls in the game. */
 val player = new Player(frontGate)
+
+  def gg = guests.areas.contains(player.location) && !player.has(guests.keyItem)
 
 /** The number of turns that have passed since the start of the game. */
 var currentTime = 0
@@ -129,6 +135,10 @@ def goodbyeMessage = {
   "Quitter!"
 }
 
+  def NPCdesc = if(player.location == headGuard.location) headGuard.toString
+  else if(player.location == target.location) target.toString
+  else "You don't see anyone who catches your eye."
+
 
 /** Plays a turn by executing the given in-game command, such as "go west". Returns a textual
 * report of what happened, or an error message if the command was unknown. In the latter
@@ -138,12 +148,23 @@ def playTurn(command: String) = {
   val outcomeReport = action.execute(this.player)
   if (outcomeReport.isDefined) {
   this.currentTime += 1
-}
-
-headGuard.location = headGuard.routine(currentTime%3)
-
+  headGuard.location = headGuard.routine(currentTime%3)
+  target.location = if(currentTime < 10) {
+    target.routine1(currentTime%3)}
+    else if(currentTime>20) {
+    target.routine2(currentTime-10)}
+    else if(currentTime>25) {
+    target.routine3(currentTime-20)}
+    else if(currentTime>30) {
+    target.routine4(currentTime-25)}
+    else if(currentTime>38) {
+    target.routine5(currentTime-30)}
+    else bedroom
+  child.location = child.routine((currentTime/2)%3)
+  }
 outcomeReport.getOrElse("Unknown command: \"" + command + "\".")
 }
+
 
 
 }
