@@ -32,6 +32,9 @@ object AdventureTextUI extends App {
     println("\n\n" + area.name)
     println("-" * area.name.length)
     println(area.fullDescription + "\n")
+    println(game.NPCdesc)
+    println(game.currentTime)
+
   }
 
 
@@ -46,5 +49,3 @@ object AdventureTextUI extends App {
   }
 
 }
-
-
