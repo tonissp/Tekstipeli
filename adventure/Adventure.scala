@@ -1,4 +1,6 @@
 package o1.adventure
+
+
 /** The class `Adventure` represents text adventure games. An adventure consists of a player and
 * a number of areas that make up the game world. It provides methods for playing the game one
 * turn at a time and for checking the state of the game.
@@ -25,7 +27,7 @@ val storageShed = new Area("Storage Shed", "A shed for storing tools. A crowbar 
 val shack = new Area("Run Down Shack", "A dilapidated cabin. You see a hole in the floor and a ladder leading down.",None)
 val underground1 = new Area("Underground Tunnel", "You see a ladder and a neverending tunnel which has no end in sight.",None)
 val underground2 = new Area("Underground Tunnel", "You are standing in a tunnel which streches on and on in two directions. There is a ladder leading up from where you're standing.",None)
-val underground3 = new Area("Underground Tunnel", "An underground tunnel with a door on one side and infinite darkness on the other.",Some(("Lockpick","forward")))
+val underground3 = new Area("Underground Tunnel", "An underground tunnel with a door on one side and infinite darkness on the other.",Some(("lockpick","forward")))
 val westernEnd = new Area("Western End of the Yard", "A simple looking area at the far-western end of the yard.",None)
 val backEntrance = new Area("Back Entrance", "A back entrance with delivery men and other workers unloading boxes. There is no end in sight for their workload.",None)
 val storageRoom = new Area("Storage Room", "A room with plenty of shelves and boxes. There appears to be a separate corner for refrigerated content.",None)
@@ -38,18 +40,17 @@ val ballroomSouth = new Area("Ballroom", "An enormous ballroom which continues o
 val entrance = new Area("Entrance", "The main entrance of the building. To the west is a guarded door, to the east the ballroom and main party.",None)
 val hallway = new Area("Hallway", "A hallway leaging to a staircase, the kitchen, and the main entrance. You best hurry up before anybody notices you.",None)
 val stairs = new Area("Staircase", "A cicrular stairway leading up and down.",None)
-val wineCellar = new Area("Wine Cellar", "You see wine barrels all around you. Behind some of the barrels appears to be a door.",None)
-val guestRoom = new Area("Guestroom", "A fancy looking room with sofas, a fireplace and a painting of some old dude. You don't know who he is supposed to be.",None)
+val wineCellar = new Area("Wine Cellar", "You see wine barrels all around you. Behind some of the barrels appears to be a door.",Some("lockpick","south"))
+val guestRoom = new Area("Guestroom", "A fancy looking room with sofas, a fireplace and a painting of some old dude. You don't know who he is supposed to be.",Some("crowbar","east"))
 val hallway2nd = new Area("Hallway", "To the west is a toilet and to the east a children's playroom.",None)
 val toilet2nd = new Area("Toilet", "A simple looking room with a toilet and sink.",None)
 val playroom = new Area("Playroom", "A children's playroom. Presumably for any children visitors may have.",None)
 val childroom = new Area("Bedroom", "This bedroom appears to belong to small child. Presumably the target's son. You see a window to the north and two doors.",None)
 val bathroom = new Area("Bathroom", "The bathroom has a shower, a bath, a sink and a toilet. Everything in here looks fairly new.",None)
 val bedroom = new Area("Bedroom", "The target's bedroom. It has surprisingly simple furnishing and looks quite plain. All in all, an average looking bedroom where nothing stand out.",None)
-val workroom = new Area("Workroom", "A nice looking room with basic office tools and a computer.",None)
-val pipe = new Area("Pipe", "The pipe you are clinging to is making noises and feels unstable. Down below is the ground, up above is a window leading to the second floor.",None)
+val workroom = new Area("Workroom", "A nice looking room with basic office tools and a computer.", None)
+val pipe = new Area("Pipe", "The pipe you are clinging to is making noises and feels unstable. Down below is the ground, up above is a window leading to the second floor.",Some("crowbar","west"))
 val escape = new Area("Somewhere Far, Far Away", "You might be wondering where you are? Nobody knows.\n\nAnd it should remain that way.",None)
-
 
 frontGate.setNeighbors(Vector( "north" -> northFence, "south" -> southFence, "west" -> yardEntrance, "escape" -> escape))
 northFence.setNeighbors(Vector( "east" -> frontGate, "west" -> westernEnd, "south" -> southFence, "escape" -> escape))
@@ -84,14 +85,15 @@ toilet2nd.setNeighbors(Vector( "east" -> hallway2nd))
 playroom.setNeighbors(Vector( "east" -> childroom, "south" -> guestRoom, "west" -> hallway2nd))
 childroom.setNeighbors(Vector( "east" -> bathroom, "west" -> playroom, "down" -> pipe))
 bathroom.setNeighbors(Vector( "south" -> bedroom, "west" -> childroom))
-bedroom.setNeighbors(Vector( "north" -> bathroom, "down" -> eastWall, "west" -> workroom))
+bedroom.setNeighbors(Vector( "north" -> bathroom, "east" -> eastWall, "west" -> workroom))
 workroom.setNeighbors(Vector( "east" -> bedroom, "west" -> guestRoom))
 pipe.setNeighbors(Vector( "up" -> childroom, "down" -> northFence))
 
 
+
 // TODO: place these two items in clearing and southForest, respectively
-storageShed.addItem(new Item("crowbar", "It's a small battery cell. Looks new."))
-storageShed.addItem(new Item("rat poison", "It's a small battery cell. Looks new."))
+storageShed.addItem(new Item("crowbar", "It's a rusty crowbar. Could maybe break down a door."))
+storageShed.addItem(new Item("rat poison", "A small vial of rat poison. Drinking the whole vial would be lethal for even a human."))
 
 workroom.addItem(new Item("loaded memory stick", "It's the remote control for your TV.\nWhat it was doing in the forest, you have no idea.\nProblem is, there's no battery."))
 
