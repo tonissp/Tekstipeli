@@ -8,14 +8,19 @@ import scala.collection.mutable.Map
 class Player(startingArea: Area, adventure: Adventure) {
   private var currentLocation = startingArea        // gatherer: changes in relation to the previous location
   private var quitCommandGiven = false              // one-way flag
-  private val possessions = Map[String, Item]()     // container of all the items that the player has
+  private val possessions = Map[String, Item]()
+  // container of all the items that the player has
   /** Determines if the player has indicated a desire to quit the game. */
   def hasQuit = this.quitCommandGiven
+
   /** Returns the current location of the player. */
   def location = this.currentLocation
+
   /** Attempts to move the player in the given direction. This is successful if there
-    * is an exit from the player's current location towards the direction name. Returns
-    * a description of the result: "You go DIRECTION." or "You can't go DIRECTION." */
+    * is an exit from the player's current location towards the direction name and
+    * the player has the possibly required items to go in that direction. Returns
+    * a description of the result:
+    * "You go DIRECTION (using the ITEM)." or "You can't go DIRECTION (without a ITEM)." */
   def go(direction: String):String = {
     val reqsUsed = this.location.requirements.find(_.getOrElse("", "")._2 == direction).getOrElse(Some("","")).get
     val msg = if(reqsUsed._1 != ""&&this.has(reqsUsed._1)) " using the "+ reqsUsed._1 else if(reqsUsed._1 != ""&&(!this.has(reqsUsed._1))) " without a "+ reqsUsed._1 else ""
@@ -86,17 +91,20 @@ class Player(startingArea: Area, adventure: Adventure) {
     else
       "You are carrying:\n" + this.possessions.keys.mkString("\n")
   }
-
+  /** Attempts to pick a lock Successfull if the player has a lockpick
+    * and there is a door to lockpick in the players area. */
   def pickLock = if(this.possessions.contains("lockpick") && (this.location == adventure.wineCellar || this.location == adventure.underground3)){
     adventure.score += 50
-    adventure.underground3.requirements=None
-    adventure.wineCellar.requirements=None
+    adventure.underground3.requirements=Vector(None)
+    adventure.wineCellar.requirements=Vector(None)
     this.possessions.remove("lockpick")
     "You have successfully picked the lock and the door is now open. Sadly your lockpick breaks after you're done with it."}
     else if(!this.possessions.contains("lockpick")) {
     "You don't have a lockpick in your inventory." }
     else "You can't use this on anything here."
 
+  /** Attempts to poison the wine. Successfull if the player has poison
+    * and there is something to poison in the players area. */
   def poisonWine = {
     if (this.possessions.contains("poison") && this.location.contains("wine glass")) {
       adventure.score += 40
@@ -117,9 +125,10 @@ class Player(startingArea: Area, adventure: Adventure) {
       "There is nothing here for you to poison."
     }
   }
-
+  /** Attempts to download all the useful data from the targets computer.
+    * Successful if player is in the study and has a memory stick. */
   def loadMemory = {
-    if (this.possessions.contains("memory stick") && this.location == adventure.workroom) {
+    if (this.possessions.contains("memory stick") && this.location == adventure.study) {
       adventure.score += 800
       this.possessions.remove("memory stick")
       this.possessions.put("loaded memory stick", new Item("loaded memory stick", "Useful."))
@@ -133,32 +142,37 @@ class Player(startingArea: Area, adventure: Adventure) {
     }
   }
 
-
+  /** Attempts to eavesdrop. Successfull if there is something to hear by eavesdropping. */
     def eavesdrop(target: String): String = {
     if(this.location.eavesdroppables.nonEmpty) adventure.score += 10
     def eavesDText(eavesroppable: Eavesroppable) = eavesroppable.speech
     val failText = "There is nothing interesting to listen in on here."
     this.location.eavesdroppables.get(target).map(eavesDText).getOrElse(failText)
   }
-
+  /** Examines an examinable object */
     def inspect(itemName: String): String = {
     if(this.location.examinables.nonEmpty) adventure.score += 10
     def inspectText(examinable: Examinable) = examinable.description
     val failText = "There is nothing interesting to inspect here."
     this.location.examinables.get(itemName).map(inspectText).getOrElse(failText)
   }
-
+  /** Incapacitates the guard */
   def incaP: String = {
     adventure.score -= 100
     adventure.headGuard.incapacitateG()
     "You sneak up on the head guard and choke him out. He seems to drop a key as he falls."
   }
-
+  /** Tries to incapacitate the guard but fails if other people are around */
   def incapacitat: String = if(!this.adventure.guests.areas.contains(this.location)) incaP else "You don't want to do this with all the people around."
 
+  /** Calls the above function if there is someone to incapacitate. */
   def incapacitate: String = if(this.location == adventure.headGuard.location && adventure.headGuard.isFine) incapacitat else "You have no reason to hurt anybody here."
 
 
+    /** The below functions are layered functions that act in a very similiar  way.
+      * Drown is basically kill but in a more stylish way.
+      * Drown has the requirements that you are in a bathroom and the target is there with you and he is alive
+      * Kill has the requirements that you are alone with the target and he is alive.*/
 
   def killlll: String = {
   adventure.score += 400
@@ -168,7 +182,7 @@ class Player(startingArea: Area, adventure: Adventure) {
 
   def killll = if(!this.adventure.guests.areas.contains(this.location)) killlll else "You don't want to do this with all the people around."
 
-  def killl = if(adventure.target.isFine) killll else "Your target is already dead. Get out of here instead of playing around. I know we made a good game and you don't want this to end but just stop. I recommend trying another playthrough if you want to kill some more."
+  def killl = if(adventure.target.isFine) killll else "Your target is already dead. Get out of here instead of playing around. I know we made a good game and you don't want this to end but just stop. \nI recommend trying another playthrough if you want to kill some more."
 
   def kill = if(this.location == adventure.target.location) killl else "You don't see your target here."
 
@@ -183,7 +197,7 @@ class Player(startingArea: Area, adventure: Adventure) {
 
   def drownnn = if(waterRooms) drownnnn else "You don't exatcly see how that's possible here."
 
-  def drownn = if(adventure.target.isFine) drownnn else "Your target is already dead. Get out of here instead of playing around. I know we made a good game and you don't want this to end, but just stop. I recommend trying another playthrough if you want to kill some more."
+  def drownn = if(adventure.target.isFine) drownnn else "Your target is already dead. Get out of here instead of playing around. I know we made a good game and you don't want this to end, but just stop. \nI recommend trying another playthrough if you want to kill some more."
 
   def drown: String = if(this.location == adventure.target.location) drownn else "You don't see your target here."
 }
