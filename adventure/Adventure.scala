@@ -156,7 +156,7 @@ class Adventure {
     else if (this.currentTime == this.timeLimit)
     "Time's up. You failed to kill your target tonight."
     else if (busted)
-    "You were caught! You might be an assassin, but it's not like you can just kill a child to silence them."
+    "You've been seen by a kid! You might be an assassin, but it's not like you can just kill a child to silence them."
     else
     "Quitter!"
   }
