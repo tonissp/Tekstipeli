@@ -1,5 +1,7 @@
   package o1.adventure
 
+  import o1.adventure.ui.AdventureTextUI.game
+
   import scala.language.postfixOps
 
 
@@ -114,7 +116,7 @@ class Adventure {
   val headGuard = new Guard("Head Guard", this, new Item("guard key", "A key carried by the head guard, you don't know what door it is for."))
   val target = new Target("Target", this, new Item("fancy key", "An engraved key. What could this be for?"))
   val child = new Child("Child", this)
-  val guests = new People(Vector(yardEntrance, frontYard, eastWall, entrance, ballroomSouth, ballroomNorth, toiletRoom), "suit and invitation")
+  val guests = new People(Vector(yardEntrance, frontYard, eastWall, entrance, ballroomSouth, ballroomNorth, wc), "suit and invitation")
 
     /** This line signals to the program wether or not the player has crossed paths with the target of the child.
       * That is if one of these NPC:s moves to the square the player inhabited on the last turn,
@@ -139,6 +141,8 @@ class Adventure {
     var currentTime = 0
   /** The maximum number of turns that this adventure game allows before time runs out. */
     val timeLimit = 49
+
+    def currenTime = s"The current time is ${19+this.currentTime/12}:" + "%02d".format((this.currentTime*5)%60) + "\n"
 
 
   /** Determines if the adventure is complete, that is, if the player has won. */
@@ -202,17 +206,17 @@ class Adventure {
       if(headGuard.isFine) headGuard.location = headGuard.routine(currentTime%4)
       if(target.isFine) {target.location = if(currentTime < 15) {
         target.routine1(currentTime%3)}
-        else if(currentTime<26) {
+        else if(currentTime<27) {
         target.routine2(currentTime-15)}
-        else if(currentTime<31) {
-        target.routine3(currentTime-26)}
-        else if(currentTime<39) {
-        target.routine4(currentTime-31)}
+        else if(currentTime<32) {
+        target.routine3(currentTime-27)}
+        else if(currentTime<40) {
+        target.routine4(currentTime-32)}
         else bedroom }
       if(target.isFine) {
         if(target.location == this.wineCellar && wineCellar.contains("poisoned wine")) target.targetGet("poisoned wine")
         else if(target.location == this.wineCellar && wineCellar.contains("wine glass")) target.targetGet("wine glass") }
-      if(currentTime == 20 && target.targetItems.contains("poisoned wine")) {
+      if(currentTime == 26 && target.targetItems.contains("poisoned wine")) {
         target.publicDeath() }
       child.location = child.routine((currentTime/2)%2)
     }
