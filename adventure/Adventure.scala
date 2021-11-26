@@ -46,7 +46,7 @@ class Adventure {
   val hallway = new Area("Hallway", "A hallway leaging to a staircase, the kitchen, and the main entrance. You best hurry up or hide yourself before anybody notices you.\nAlthough you can hear some chefs talking about something interesting in the next room over.", Some("suit and invitation", "east"))
   val stairs = new Area("Staircase", "A cicrular stairway leading up and down.",None)
   val wineCellar = new Area("Wine Cellar", "You see wine barrels all around you. Behind some of the barrels appears to be a door.",Some("fancy key","south"))
-  val guestRoom = new Area("Guestroom", "A fancy looking room with sofas, a fireplace and a painting of some old dude. You don't know who he is supposed to be.",Some("crowbar","east"))
+  val guestRoom = new Area("Guestroom", "A fancy looking room with sofas, a fireplace and a painting of some old dude. You don't know who he is supposed to be.\n There is a staircase at leading down.",Some("crowbar","east"))
   val hallway2nd = new Area("Hallway", "To the west is a toilet and to the east a children's playroom.",None)
   val toilet2nd = new Area("Toilet", "A simple looking room with a toilet and sink.",None)
   val playroom = new Area("Playroom", "A children's playroom. Presumably for any children visitors may have.",None)
@@ -81,7 +81,7 @@ class Adventure {
   wc.setNeighbors(Vector( "outside" -> ballroomNorth, "inside" -> toiletRoom))
   toiletRoom.setNeighbors(Vector( "outside" -> wc))
   ballroomNorth.setNeighbors(Vector( "east" -> wc, "south" -> ballroomSouth, "west" -> bar))
-  ballroomSouth.setNeighbors(Vector( "north" -> ballroomNorth, "east" -> entrance))
+  ballroomSouth.setNeighbors(Vector( "north" -> ballroomNorth, "west" -> entrance))
   entrance.setNeighbors(Vector( "east" -> ballroomSouth, "south" -> frontYard, "west" -> hallway))
   hallway.setNeighbors(Vector( "north" -> kitchen, "east" -> entrance, "west" -> stairs))
   stairs.setNeighbors(Vector( "up" -> guestRoom, "down" -> wineCellar, "east" ->hallway))
@@ -95,6 +95,7 @@ class Adventure {
   bedroom.setNeighbors(Vector( "north" -> bathroom, "west" -> workroom))
   workroom.setNeighbors(Vector( "east" -> bedroom, "west" -> guestRoom))
   pipe.setNeighbors(Vector( "up" -> childroom, "down" -> northFence))
+
 
 
 
