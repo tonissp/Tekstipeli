@@ -4,6 +4,7 @@ import scala.swing._
 import scala.swing.event._
 import javax.swing.UIManager
 import o1.adventure.Adventure
+import o1.adventure.ui.AdventureTextUI.game
 
 
 ////////////////// NOTE TO STUDENTS //////////////////////////
@@ -94,6 +95,7 @@ object AdventureGUI extends SimpleSwingApplication {
     this.minimumSize = new Dimension(200, 200)
     this.pack()
     this.input.requestFocusInWindow()
+    def publicD: String = if(game.target.isPublic) "You hear bustling and panic. Seems like someone has poisoned your target and now he's dead. What a shame." else " "
 
 
     def playTurn(command: String) = {
@@ -112,8 +114,10 @@ object AdventureGUI extends SimpleSwingApplication {
       } else {
         this.turnOutput.text = info + "\n\n" + this.game.goodbyeMessage
       }
-      this.locationInfo.text = this.player.location.fullDescription
-      this.turnCounter.text = "Turns played: " + this.game.currentTime
+      this.locationInfo.text = {
+        this.player.location.fullDescription + "\n\n" + game.NPCdesc+ "\n\n" + publicD
+      }
+      this.turnCounter.text = game.currenTime
     }
 
 
