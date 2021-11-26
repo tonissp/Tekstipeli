@@ -19,7 +19,6 @@ class Action(input: String) {
   def execute(actor: Player) = this.verb match {
     case "head"        => Some(actor.go(this.modifiers))
     case "wait"      => Some(actor.waits())
-    case "quit"      => Some(actor.quit())
     case "inventory" => Some(actor.inventory)
     case "take"       => Some(actor.get(this.modifiers))
     case "drop"      => Some(actor.drop(this.modifiers))
@@ -32,12 +31,6 @@ class Action(input: String) {
     case "poison" => Some(actor.poisonWine)
     case "download" => Some(actor.loadMemory)
     case "lockpick" => Some(actor.pickLock)
+    case "quit"      => Some(actor.quit())
     case other       => None
   }
-
-
-  /** Returns a textual description of the action object, for debugging purposes. */
-  override def toString = this.verb + " (modifiers: " + this.modifiers + ")"
-
-
-}
