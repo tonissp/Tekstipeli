@@ -23,9 +23,12 @@ class Player(startingArea: Area, adventure: Adventure) {
     this.currentLocation = destination.getOrElse(this.currentLocation)
     if (destination.isDefined) "You go " + direction +msg+ "." else "You can't go " + direction +msg+ "." }
 
+    var pPrevLoc = startingArea
+
   /** Causes the player to rest for a short while (this has no substantial effect in game terms).
     * Returns a description of what happened. */
   def waits() = {
+    adventure.score += 10
     "You wait and observe your surroundings."
   }
   /** Signals that the player wants to quit the game. Returns a description of what happened
@@ -45,6 +48,7 @@ class Player(startingArea: Area, adventure: Adventure) {
     for (newItem <- received) {
       this.possessions.put(newItem.name, newItem)
     }
+    adventure.score -= 30
     if (received.isDefined) "You pick up the " + itemName + "." else "There is no " + itemName + " here to pick up."
   }
   /** Determines whether the player is carrying an item of the given name. */
@@ -84,6 +88,7 @@ class Player(startingArea: Area, adventure: Adventure) {
   }
 
   def pickLock = if(this.possessions.contains("lockpick") && (this.location == adventure.wineCellar || this.location == adventure.underground3)){
+    adventure.score += 50
     adventure.underground3.requirements=None
     adventure.wineCellar.requirements=None
     this.possessions.remove("lockpick")
@@ -94,12 +99,14 @@ class Player(startingArea: Area, adventure: Adventure) {
 
   def poisonWine = {
     if (this.possessions.contains("poison") && this.location.contains("wine glass")) {
+      adventure.score += 40
       this.location.removeItem("wine glass")
       this.possessions.remove("poison")
       this.location.addItem(new Item("poisoned wine", "Quite lethal."))
       "You have posioned the wine. Now to wait for someone to drink it."
     }
-    else if (this.possessions.contains("poison") && this.location == adventure.bar) {
+    else if (this.possessions.contains("poison") && (this.location == adventure.bar || this.location == adventure.kitchen)) {
+      adventure.score -= 300
       this.possessions.remove("poison")
       "You've poisoned a random wine bottle. Hopefully the target will choose to drink it."
     }
@@ -113,6 +120,7 @@ class Player(startingArea: Area, adventure: Adventure) {
 
   def loadMemory = {
     if (this.possessions.contains("memory stick") && this.location == adventure.workroom) {
+      adventure.score += 800
       this.possessions.remove("memory stick")
       this.possessions.put("loaded memory stick", new Item("loaded memory stick", "Useful."))
       "You have found quite a bit of useful data on his computer. With all of this in your posession killing him is now unnecessary."
@@ -127,18 +135,21 @@ class Player(startingArea: Area, adventure: Adventure) {
 
 
     def eavesdrop(target: String): String = {
+    if(this.location.eavesdroppables.nonEmpty) adventure.score += 10
     def eavesDText(eavesroppable: Eavesroppable) = eavesroppable.speech
     val failText = "There is nothing interesting to listen in on here."
     this.location.eavesdroppables.get(target).map(eavesDText).getOrElse(failText)
   }
 
     def inspect(itemName: String): String = {
+    if(this.location.examinables.nonEmpty) adventure.score += 10
     def inspectText(examinable: Examinable) = examinable.description
     val failText = "There is nothing interesting to inspect here."
     this.location.examinables.get(itemName).map(inspectText).getOrElse(failText)
   }
 
   def incaP: String = {
+    adventure.score -= 100
     adventure.headGuard.incapacitateG()
     "You sneak up on the head guard and choke him out. He seems to drop a key as he falls."
   }
@@ -150,6 +161,7 @@ class Player(startingArea: Area, adventure: Adventure) {
 
 
   def killlll: String = {
+  adventure.score += 400
   adventure.target.killT()
   "You walk up the bastard and snap his neck. Nobody will ever hear form him again.\nA fancy looking key falls out of his pocket as he drops dead."
   }
@@ -164,6 +176,7 @@ class Player(startingArea: Area, adventure: Adventure) {
   def waterRooms = this.location==adventure.toiletRoom || this.location==adventure.toilet2nd || this.location==adventure.bathroom
 
   def drownnnn: String = {
+  adventure.score += 600
   adventure.target.killT()
   "You push the target's head down into the toilet and wait for him to drown. What a way to go!"
   }
