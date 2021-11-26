@@ -17,11 +17,11 @@ class Action(input: String) {
     * of the action (such as "You go west."). The description is returned in an `Option`
     * wrapper; if the command was not recognized, `None` is returned. */
   def execute(actor: Player) = this.verb match {
-    case "go"        => Some(actor.go(this.modifiers))
+    case "head"        => Some(actor.go(this.modifiers))
     case "wait"      => Some(actor.waits())
     case "quit"      => Some(actor.quit())
     case "inventory" => Some(actor.inventory)
-    case "get"       => Some(actor.get(this.modifiers))
+    case "take"       => Some(actor.get(this.modifiers))
     case "drop"      => Some(actor.drop(this.modifiers))
     case "examine"   => Some(actor.examine(this.modifiers))
     case "incapacitate" => Some(actor.incapacitate)
