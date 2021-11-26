@@ -18,7 +18,7 @@ class Player(startingArea: Area, adventure: Adventure) {
     * a description of the result: "You go DIRECTION." or "You can't go DIRECTION." */
   def go(direction: String):String = {
     val reqsUsed = this.location.requirements.find(_.getOrElse("", "")._2 == direction).getOrElse(Some("","")).get
-    val msg = if(reqsUsed._1 != ""&&this.has(reqsUsed._1)) " using "+ reqsUsed._1 else if(reqsUsed._1 != ""&&(!this.has(reqsUsed._1))) " without "+ reqsUsed._1 else ""
+    val msg = if(reqsUsed._1 != ""&&this.has(reqsUsed._1)) " using the "+ reqsUsed._1 else if(reqsUsed._1 != ""&&(!this.has(reqsUsed._1))) " without a "+ reqsUsed._1 else ""
     val destination = if(reqsUsed==("","")||(reqsUsed._2 ==direction&&this.has(reqsUsed._1)))this.location.neighbor(direction) else None
     this.currentLocation = destination.getOrElse(this.currentLocation)
     if (destination.isDefined) "You go " + direction +msg+ "." else "You can't go " + direction +msg+ "." }
