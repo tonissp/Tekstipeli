@@ -17,7 +17,7 @@ class Area(var name: String, var description: String, var requirements: Vector[O
   val examinables = Map[String, Examinable]()
   val eavesdroppables = Map[String, Eavesroppable]()
 
-
+  /** Returns the areas directly connected to this one. */
   def neighboringAreas = neighbors.values.toVector
 
   /** Returns the area that can be reached from this area by moving in the given direction. The result
@@ -52,6 +52,7 @@ class Area(var name: String, var description: String, var requirements: Vector[O
 
     if(areaItemsKey.isEmpty) this.description + exitList else this.description + itemList
   }
+  /** These ones are pretty self explanatory. */
 
   def addItem(item: Item) = {
     areaItemsKey += item.toString -> item
@@ -65,15 +66,16 @@ class Area(var name: String, var description: String, var requirements: Vector[O
     eavesdroppables += eavesroppable.toString -> eavesroppable
   }
 
+  /** Determines if the area contains an item or not. */
   def contains(itemName: String) = this.areaItemsKey.contains(itemName)
 
 
   def removeItem(itemName: String): Option[Item] = {
     if(this.contains(itemName)) {
-    val hmm = areaItemsKey.get(itemName)
-    areaItemsKey -= itemName
-    hmm
-    }
+      val hmm = areaItemsKey.get(itemName)
+      areaItemsKey -= itemName
+      hmm
+      }
     else areaItemsKey.get(itemName)
   }
 
