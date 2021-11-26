@@ -10,8 +10,11 @@ class Target(val name: String, world: Adventure, item: Item) {
   private var isOoC = false                      // flag: can be broken or intact
   private var publicDeathh = false
   private val targetPossessions = Map[String, Item]()
+  var uhoh = false
 
   def targetItems = targetPossessions
+
+  var tPrevLoc = initialLocation
 
 
 
@@ -29,6 +32,7 @@ class Target(val name: String, world: Adventure, item: Item) {
   }
 
   def publicDeath() = {
+    world.score += 800
     this.publicDeathh = true
     this.isOoC = true
   }
@@ -56,7 +60,10 @@ class Target(val name: String, world: Adventure, item: Item) {
   }
 
 
-  def sameSpot = if(this.world.guests.areas.contains(this.location)) "What the hell are you doing here!" else "You see your target. All that you need now is a moment alone with him."
+  def sameSpot = if(!this.world.guests.areas.contains(this.location) && this.isFine) {
+  uhoh = true
+  "'What the hell are you doing here!'"
+  } else if(!this.isFine) "There's your target. Laying dead. Good job." else "You see your target. All that you need now is a moment alone with him."
 
   override def toString: String = sameSpot
 
