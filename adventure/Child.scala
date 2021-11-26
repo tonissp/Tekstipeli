@@ -5,6 +5,7 @@ class Child (val name: String, world: Adventure) {
 
   private val initialLocation = world.childroom
   var location = initialLocation         // gatherer: changes in relation to the old location
+  var cPrevLoc = initialLocation
 
 
 
