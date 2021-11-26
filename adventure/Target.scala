@@ -5,7 +5,7 @@ import scala.collection.mutable.Map
 class Target(val name: String, world: Adventure, item: Item) {
 
     /** Initial value definitions for the class. */
-  
+
   private val initialLocation = world.bedroom
   private val targetPossessions = Map[String, Item]()
   private var isOoC = false                      // flag: can be broken or intact
@@ -29,7 +29,7 @@ class Target(val name: String, world: Adventure, item: Item) {
     this.location.addItem(item)
     this.isOoC = true
   }
-  
+
   /** If the target is poisoned this function will be activated. */
   def publicDeath() = {
     world.score += 800
@@ -44,9 +44,9 @@ class Target(val name: String, world: Adventure, item: Item) {
   def isPublic = this.publicDeathh
 
   /** These lines define the possible routes the target walks along. */
-  
+
   val routine1 = Vector(world.bedroom, world.study, world.bedroom)
-  val routine2 = Vector(world.study, world.guestRoom, world.stairs, world.wineCellar, world.wineCellar, world.stairs, world.hallway, world.entrance, world.ballroomSouth, world.ballroomNorth, world.ballroomSouth)
+  val routine2 = Vector(world.study, world.guestRoom, world.stairs, world.wineCellar, world.wineCellar, world.stairs, world.hallway, world.entrance, world.ballroomSouth, world.ballroomNorth, world.ballroomSouth, world.ballroomNorth)
   val routine3 = Vector(world.wc, world.toiletRoom, world.toiletRoom, world.toiletRoom, world.wc)
   val routine4 = Vector(world.ballroomSouth, world.ballroomNorth, world.ballroomSouth, world. entrance, world.hallway, world.stairs, world.guestRoom, world.study)
 
