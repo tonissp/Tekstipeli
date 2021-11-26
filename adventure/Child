@@ -5,6 +5,7 @@ class Child (val name: String, world: Adventure) {
 
   private val initialLocation = world.childroom
   var location = initialLocation         // gatherer: changes in relation to the old location
+  var cPrevLoc = initialLocation
 
 
 
@@ -27,10 +28,10 @@ class Child (val name: String, world: Adventure) {
     *
     * @return `true` if the robot successfully changed locations, `false` if it
     *         did not (even if it changed facing) */
-  val routine: Vector[Area] = Vector(world.childroom, world.playroom, world.childroom, world.bathroom)
+  val routine: Vector[Area] = Vector(world.childroom, world.playroom)
 
 
-  override def toString: String = "You see a small child. Presumably the target's. Getting caught by him would be troublesome."
+  override def toString: String = "You see a small child. Presumably the target's. Getting caught by him is quite troublesome."
 
 }
 
