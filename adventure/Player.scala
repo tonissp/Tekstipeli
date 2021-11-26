@@ -17,18 +17,11 @@ class Player(startingArea: Area, adventure: Adventure) {
     * is an exit from the player's current location towards the direction name. Returns
     * a description of the result: "You go DIRECTION." or "You can't go DIRECTION." */
   def go(direction: String):String = {
-    val canPass:Boolean = {
-      if(this.location.requirements.isEmpty)true else{
-        val req = this.location.requirements.get
-        if(req._2!=direction||this.has(req._1))true else false
-      }
-    }
-    if(canPass||this.location.neighbor(direction).isEmpty){
-    val destination = this.location.neighbor(direction)
+    val reqsUsed = this.location.requirements.find(_.getOrElse("", "")._2 == direction).getOrElse(Some("","")).get
+    val msg = if(reqsUsed._1 != ""&&this.has(reqsUsed._1)) " using "+ reqsUsed._1 else if(reqsUsed._1 != ""&&(!this.has(reqsUsed._1))) " without "+ reqsUsed._1 else ""
+    val destination = if(reqsUsed==("","")||(reqsUsed._2 ==direction&&this.has(reqsUsed._1)))this.location.neighbor(direction) else None
     this.currentLocation = destination.getOrElse(this.currentLocation)
-    if (destination.isDefined) "You go " + direction + "." else "You can't go " + direction + "."} else {
-    if((this.location.requirements.get._1 == "suit and invitation" || this.location.requirements.get._1 == "chef's outfit") && this.location != adventure.frontGate) "You don't want to go there in your current clothes." else {"You need a "+ this.location.requirements.get._1 + " to pass."}}
-  }
+    if (destination.isDefined) "You go " + direction +msg+ "." else "You can't go " + direction +msg+ "." }
 
   /** Causes the player to rest for a short while (this has no substantial effect in game terms).
     * Returns a description of what happened. */
