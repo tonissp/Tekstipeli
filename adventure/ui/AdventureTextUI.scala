@@ -6,7 +6,7 @@ import scala.io.StdIn._
 import scala.math.Ordering.String
 
 /** The singleton object `AdventureTextUI` represents a fully text-based version of the
-  * Adventure game application. The object serves as a possible entry point for the game,
+  * Hitteekkari game application. The object serves as a possible entry point for the game,
   * and can be run to start up a user interface that operates in the text console.
   * @see [[AdventureGUI]] */
 object AdventureTextUI extends App {
@@ -34,7 +34,7 @@ object AdventureTextUI extends App {
     println("\n\n" + area.name)
     println("-" * area.name.length)
     println(area.fullDescription + "\n")
-    println(s"The current time is ${19+game.currentTime/12}:" + "%02d".format((game.currentTime*5)%60) + "\n")
+    println(game.currenTime)
     println(game.NPCdesc)
     if(game.target.isPublic) println("You hear bustling and panic. Seems like someone has poisoned your target and now he's dead. What a shame.")
   }
