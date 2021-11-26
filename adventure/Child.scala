@@ -1,30 +1,15 @@
 package o1.adventure
 
-class Guard(val name: String, world: Adventure, item: Item) {
+class Child (val name: String, world: Adventure) {
 
 
-  private val initialLocation = world.yardEntrance
+  private val initialLocation = world.childroom
   var location = initialLocation         // gatherer: changes in relation to the old location
-  private var isOoC = false                      // flag: can be broken or intact
 
 
 
   /** Returns a square that neighbors the robot's current location in the given direction. */
   def neighbors = this.location.neighbors
-
-
-
-  /** Causes the robot to malfunction (typically as the result of a collision).
-    * A broken robot does not do anything during its turns.
-    * @see [[fix]] */
-  def incapacitateG() = {
-    this.location.addItem(item)
-    this.isOoC = true
-  }
-
-  /** Determines whether the robot is currently intact or not. A robot is intact
-    * unless it has been broken with the `destroy` method and not fixed since. */
-  def isFine = !this.isOoC
 
 
   /** Relocates the robot within its current world to the square next to the robot's
@@ -42,11 +27,11 @@ class Guard(val name: String, world: Adventure, item: Item) {
     *
     * @return `true` if the robot successfully changed locations, `false` if it
     *         did not (even if it changed facing) */
-  val routine: Vector[Area] = Vector(world.yardEntrance, world.thickGardenEast, world.thickGardenWest, world.frontYard)
+  val routine: Vector[Area] = Vector(world.childroom, world.playroom)
 
 
-  override def toString: String = {
-    if(this.isFine) "There is a guard walking around. Based on his appearance he's most likely the head guard."
-    else "The guard lays unconscious on the floor."
-  }
+  override def toString: String = "You see a small child. Presumably the target's. Getting caught by him is quite troublesome."
+
 }
+
+class People (val areas: Vector[Area], val keyItem: String)

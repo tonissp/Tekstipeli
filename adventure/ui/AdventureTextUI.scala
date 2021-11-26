@@ -1,7 +1,9 @@
 package o1.adventure.ui
 
 import o1.adventure._
+
 import scala.io.StdIn._
+import scala.math.Ordering.String
 
 /** The singleton object `AdventureTextUI` represents a fully text-based version of the
   * Adventure game application. The object serves as a possible entry point for the game,
@@ -32,9 +34,9 @@ object AdventureTextUI extends App {
     println("\n\n" + area.name)
     println("-" * area.name.length)
     println(area.fullDescription + "\n")
+    println(s"The current time is ${19+game.currentTime/12}:" + "%02d".format((game.currentTime*5)%60) + "\n")
     println(game.NPCdesc)
-    println(game.currentTime)
-
+    if(game.target.isPublic) println("You hear bustling and panic. Seems like someone has poisoned your target and now he's dead. What a shame.")
   }
 
 
@@ -43,11 +45,9 @@ object AdventureTextUI extends App {
     println()
     val command = readLine("Command: ")
     val turnReport = this.game.playTurn(command)
-    if (!turnReport.isEmpty) {
+    if (turnReport.nonEmpty) {
       println(turnReport)
     }
   }
 
 }
-
-

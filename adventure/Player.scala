@@ -5,7 +5,7 @@ import scala.collection.mutable.Map
   * A player object's state is mutable: the player's location and possessions can change, for instance.
   *
   * @param startingArea  the initial location of the player */
-class Player(startingArea: Area) {
+class Player(startingArea: Area, adventure: Adventure) {
   private var currentLocation = startingArea        // gatherer: changes in relation to the previous location
   private var quitCommandGiven = false              // one-way flag
   private val possessions = Map[String, Item]()     // container of all the items that the player has
@@ -25,21 +25,15 @@ class Player(startingArea: Area) {
     }
     if(canPass||this.location.neighbor(direction).isEmpty){
     val destination = this.location.neighbor(direction)
-    val req = if(this.location.requirements.getOrElse(("",""))._2==direction){" using the "+this.location.requirements.get._1}else{""}
     this.currentLocation = destination.getOrElse(this.currentLocation)
-    if (destination.isDefined){ "You go " + direction + req + "."} else "You can't go " + direction + "."}else{"You need a "+ this.location.requirements.get._1 + " to pass."}
+    if (destination.isDefined) "You go " + direction + "." else "You can't go " + direction + "."} else {
+    if((this.location.requirements.get._1 == "suit and invitation" || this.location.requirements.get._1 == "chef's outfit") && this.location != adventure.frontGate) "You don't want to go there in your current clothes." else {"You need a "+ this.location.requirements.get._1 + " to pass."}}
   }
-  def get(itemName:String):String={
-    val itemToGet = this.currentLocation.removeItem(itemName)
 
-    if(itemToGet.isDefined){
-      this.items += itemName -> itemToGet.get
-      s"You pick up the ${itemName}."} else {s"There is no ${itemName} here to pick up."}
-  }
   /** Causes the player to rest for a short while (this has no substantial effect in game terms).
     * Returns a description of what happened. */
-  def rest() = {
-    "You rest for a while. Better get a move on, though."
+  def waits() = {
+    "You wait and observe your surroundings."
   }
   /** Signals that the player wants to quit the game. Returns a description of what happened
     * within the game as a result (which is the empty string, in this case). */
@@ -83,6 +77,8 @@ class Player(startingArea: Area) {
     val failText = "If you want to examine something, you need to pick it up first."
     this.possessions.get(itemName).map(lookText).getOrElse(failText)
   }
+
+
   /** Causes the player to list what they are carrying. Returns a listing of the player's
     * possessions or a statement indicating that the player is carrying nothing. The return
     * value has the form "You are carrying:\nITEMS ON SEPARATE LINES" or "You are empty-handed."
@@ -93,4 +89,95 @@ class Player(startingArea: Area) {
     else
       "You are carrying:\n" + this.possessions.keys.mkString("\n")
   }
+
+  def pickLock = if(this.possessions.contains("lockpick") && (this.location == adventure.wineCellar || this.location == adventure.underground3)){
+    adventure.underground3.requirements=None
+    adventure.wineCellar.requirements=None
+    this.possessions.remove("lockpick")
+    "You have successfully picked the lock and the door is now open. Sadly your lockpick breaks after you're done with it."}
+    else if(!this.possessions.contains("lockpick")) {
+    "You don't have a lockpick in your inventory." }
+    else "You can't use this on anything here."
+
+  def poisonWine = {
+    if (this.possessions.contains("poison") && this.location.contains("wine glass")) {
+      this.location.removeItem("wine glass")
+      this.possessions.remove("poison")
+      this.location.addItem(new Item("poisoned wine", "Quite lethal."))
+      "You have posioned the wine. Now to wait for someone to drink it."
+    }
+    else if (this.possessions.contains("poison") && this.location == adventure.bar) {
+      this.possessions.remove("poison")
+      "You've poisoned a random wine bottle. Hopefully the target will choose to drink it."
+    }
+    else if(!this.possessions.contains("poison")) {
+      "You don't have any poison in your inventory."
+    }
+    else {
+      "There is nothing here for you to poison."
+    }
+  }
+
+  def loadMemory = {
+    if (this.possessions.contains("memory stick") && this.location == adventure.workroom) {
+      this.possessions.remove("memory stick")
+      this.possessions.put("loaded memory stick", new Item("loaded memory stick", "Useful."))
+      "You have found quite a bit of useful data on his computer. With all of this in your posession killing him is now unnecessary."
+    }
+    else if(!this.possessions.contains("memory stick")) {
+      "You don't have a memory stick on you."
+    }
+    else {
+      "There is nothing here for you to use it on."
+    }
+  }
+
+
+    def eavesdrop(target: String): String = {
+    def eavesDText(eavesroppable: Eavesroppable) = eavesroppable.speech
+    val failText = "There is nothing interesting to listen in on here."
+    this.location.eavesdroppables.get(target).map(eavesDText).getOrElse(failText)
+  }
+
+    def inspect(itemName: String): String = {
+    def inspectText(examinable: Examinable) = examinable.description
+    val failText = "There is nothing interesting to inspect here."
+    this.location.examinables.get(itemName).map(inspectText).getOrElse(failText)
+  }
+
+  def incaP: String = {
+    adventure.headGuard.incapacitateG()
+    "You sneak up on the head guard and choke him out. He seems to drop a key as he falls."
+  }
+
+  def incapacitat: String = if(!this.adventure.guests.areas.contains(this.location)) incaP else "You don't want to do this with all the people around."
+
+  def incapacitate: String = if(this.location == adventure.headGuard.location && adventure.headGuard.isFine) incapacitat else "You have no reason to hurt anybody here."
+
+
+
+  def killlll: String = {
+  adventure.target.killT()
+  "You walk up the bastard and snap his neck. Nobody will ever hear form him again.\nA fancy looking key falls out of his pocket as he drops dead."
+  }
+
+  def killll = if(!this.adventure.guests.areas.contains(this.location)) killlll else "You don't want to do this with all the people around."
+
+  def killl = if(adventure.target.isFine) killll else "Your target is already dead. Get out of here instead of playing around. I know we made a good game and you don't want this to end but just stop. I recommend trying another playthrough if you want to kill some more."
+
+  def kill = if(this.location == adventure.target.location) killl else "You don't see your target here."
+
+
+  def waterRooms = this.location==adventure.toiletRoom || this.location==adventure.toilet2nd || this.location==adventure.bathroom
+
+  def drownnnn: String = {
+  adventure.target.killT()
+  "You push the target's head down into the toilet and wait for him to drown. What a way to go!"
+  }
+
+  def drownnn = if(waterRooms) drownnnn else "You don't exatcly see how that's possible here."
+
+  def drownn = if(adventure.target.isFine) drownnn else "Your target is already dead. Get out of here instead of playing around. I know we made a good game and you don't want this to end, but just stop. I recommend trying another playthrough if you want to kill some more."
+
+  def drown: String = if(this.location == adventure.target.location) drownn else "You don't see your target here."
 }

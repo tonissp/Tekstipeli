@@ -10,16 +10,20 @@ import scala.collection.mutable.Map
   * other, neighboring areas. An area also has a name and a description.
   * @param name         the name of the area
   * @param description  a basic description of the area (typically not including information about items) */
-class Area(var name: String, var description: String, val requirements: Option[(String, String)]) {
+class Area(var name: String, var description: String, var requirements: Option[(String, String)]) {
 
   val neighbors = Map[String, Area]()
-
   val areaItemsKey = Map[String, Item]()
+  val examinables = Map[String, Examinable]()
+  val eavesdroppables = Map[String, Eavesroppable]()
 
+
+  def neighboringAreas = neighbors.values.toVector
 
   /** Returns the area that can be reached from this area by moving in the given direction. The result
     * is returned in an `Option`; `None` is returned if there is no exit in the given direction. */
   def neighbor(direction: String) = this.neighbors.get(direction)
+
 
 
   /** Adds an exit from this area to the given area. The neighboring area is reached by moving in
@@ -44,13 +48,21 @@ class Area(var name: String, var description: String, val requirements: Option[(
     * The directions are listed in an arbitrary order. */
   def fullDescription = {
     val exitList = "\n\nExits available: " + this.neighbors.keys.mkString(" ")
-    val itemList = "\nYou see here: " + this.areaItemsKey.keys.mkString(" ") + "\n\nExits available: " + this.neighbors.keys.mkString(" ")
+    val itemList = "\nYou see here: " + this.areaItemsKey.keys.mkString(", ") + "\n\nExits available: " + this.neighbors.keys.mkString(" ")
 
     if(areaItemsKey.isEmpty) this.description + exitList else this.description + itemList
   }
 
   def addItem(item: Item) = {
     areaItemsKey += item.toString -> item
+  }
+
+  def addExaminable(examinable: Examinable) = {
+    examinables += examinable.toString -> examinable
+  }
+
+  def addEavesdroppable(eavesroppable: Eavesroppable) = {
+    eavesdroppables += eavesroppable.toString -> eavesroppable
   }
 
   def contains(itemName: String) = this.areaItemsKey.contains(itemName)

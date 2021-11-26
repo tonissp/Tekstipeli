@@ -18,13 +18,20 @@ class Action(input: String) {
     * wrapper; if the command was not recognized, `None` is returned. */
   def execute(actor: Player) = this.verb match {
     case "go"        => Some(actor.go(this.modifiers))
-    case "rest"      => Some(actor.rest())
-    case "xyzzy"     => Some("The grue tastes yummy.")
+    case "wait"      => Some(actor.waits())
     case "quit"      => Some(actor.quit())
     case "inventory" => Some(actor.inventory)
     case "get"       => Some(actor.get(this.modifiers))
     case "drop"      => Some(actor.drop(this.modifiers))
     case "examine"   => Some(actor.examine(this.modifiers))
+    case "incapacitate" => Some(actor.incapacitate)
+    case "eliminate" => Some(actor.kill)
+    case "drown" => Some(actor.drown)
+    case "overhear" => Some(actor.eavesdrop(this.modifiers))
+    case "inspect" => Some(actor.inspect(this.modifiers))
+    case "poison" => Some(actor.poisonWine)
+    case "download" => Some(actor.loadMemory)
+    case "lockpick" => Some(actor.pickLock)
     case other       => None
   }
 
