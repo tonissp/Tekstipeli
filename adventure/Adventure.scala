@@ -99,15 +99,15 @@ class Adventure {
 
 
 
-  car.addItem(new Item("suit and invitation", "useful"))
-  car.addItem(new Item("chef's outfit", "useful"))
+    car.addItem(new Item("suit and invitation", "A useful set which will let you blend in and sneak into the party."))
+  car.addItem(new Item("chef's outfit", "Sometimes you just got to work behind the scenes."))
   car.addItem(new Item("memory stick", "An empty memory stick. It might be useful."))
   car.addItem(new Item("lockpick", "A lockpick which would be quite useful in the right situation."))
   storageShed.addItem(new Item("poison", "Quite a large amount of rat poison. Enough to kill a man."))
   storageShed.addItem(new Item("crowbar", "It's a small battery cell. Looks new."))
   wineCellar.addItem(new Item("wine glass", "useful"))
-  hallway.addEavesdroppable(new Eavesroppable("chefs", "No, no, no. You don't have to pour any wine for the master. He's got his own favourite wine down in the cellar.\nIt's the only thing he ever drinks.\n\nAnd don't even think about touching it. He'll cut off your hands if you do."))
-  ballroomNorth.addEavesdroppable(new Eavesroppable("guests", "Apparently the owner is going to come down here somewhere between 9 and 10PM."))
+  hallway.addEavesdroppable(new Eavesroppable("chefs", "'No, no, no. You don't have to pour any wine for the master. He's got his own favourite wine down in the cellar.\nIt's the only thing he ever drinks.\n\nAnd don't even think about touching it. He'll cut off your hands if you do.'"))
+  ballroomNorth.addEavesdroppable(new Eavesroppable("guests", "'Apparently the owner is going to come down here somewhere between 9 and 10PM.'"))
   wineCellar.addExaminable(new Examinable("barrel", "An expensive looking barrel of wine. This is not the kind of thing a good man can afford."))
 
 
@@ -117,12 +117,14 @@ class Adventure {
 
   val guests = new People(Vector(yardEntrance, frontYard, eastWall, entrance, ballroomSouth, ballroomNorth, toiletRoom), "suit and invitation")
 
+  var crossPath = false
+
 
 
   /** The character that the player controls in the game. */
     val player = new Player(car, this)
 
-    def busted = child.location == player.location
+    def busted = (child.location == player.location)
 
     def neighboringdirection(playerLoc: Area, npcLoc: Area) = playerLoc.neighbors.filter(_._2 == npcLoc).keys.toVector(0)
 
@@ -145,18 +147,24 @@ class Adventure {
     "\n\nAnyways, I digress. The situation is simple: You have a target and your mission is to eliminate him. Your deadline is 23:00. Get to work." +
     "\n\nAvailable commands: go (direction), wait, quit, inventory, get (item), drop (item), examine (item), incapacitate, eliminate, drown, overhear(people), inspect(something), poison, download, lockpick" +
     "\nFeel free to use any of the tools in the car, but try to play through the game multiple times and find different methods to complete your mission." +
-    "\nIt is 100% possible to beat the game without using any of the starting items, but there are certain approaches which are only available to you with these items."
+    "\nIt is 100% possible to beat the game without using any of the starting items, but there are certain approaches which are only available to you with these items." +
+    "\nTry different approaches to get a highscore."
 
+  var score = 0
 
   /** Returns a message that is to be displayed to the player at the end of the game. The message
   * will be different depending on whether or not the player has completed their quest. */
   def goodbyeMessage = {
     if (this.isComplete)
-    "Good job. You have successfully completed your mission."
+    s"Good job. You have successfully completed your mission.\n\nYour score: $score points."
     else if (this.currentTime == this.timeLimit)
     "Time's up. You failed to kill your target tonight."
+    else if (target.uhoh && target.isFine)
+    "You were caught by your target. You should have killed him as soon as he noticed you."
     else if (busted)
-    "You've been seen by a kid! You might be an assassin, but it's not like you can just kill a child to silence them."
+    "You were caught! You might be an assassin, but it's not like you can just kill a child to silence them."
+    else if(crossPath)
+    "You crossed path with someone you shouldn't have in a place where you shouldn't be. Better luck next time."
     else
     "Quitter!"
   }
@@ -170,10 +178,14 @@ class Adventure {
   else "Nobody nearby catches your eye."
 
 
+
   /** Plays a turn by executing the given in-game command, such as "go west". Returns a textual
   * report of what happened, or an error message if the command was unknown. In the latter
   * case, no turns elapse. */
   def playTurn(command: String) = {
+    player.pPrevLoc = player.location
+    target.tPrevLoc = target.location
+    child.cPrevLoc = child.location
     val action = new Action(command)
     val outcomeReport = action.execute(this.player)
     if (outcomeReport.isDefined) {
@@ -195,6 +207,11 @@ class Adventure {
       target.publicDeath() }
     child.location = child.routine((currentTime/2)%2)
     }
+  if ((target.tPrevLoc == player.location && player.pPrevLoc == target.location) || (child.cPrevLoc == player.location && player.pPrevLoc == child.location)) {
+    crossPath = true
+    player.quit()
+  }
+  score -= 10
   outcomeReport.getOrElse("Unknown command: \"" + command + "\".")
   }
 
