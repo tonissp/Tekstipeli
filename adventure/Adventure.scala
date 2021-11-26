@@ -19,7 +19,7 @@ class Adventure {
 
   val car = new Area("Car", "Your very own nice and comfortable car, filled with many useful tools.", Vector(None))
 
-  val frontGate = new Area("Front Gate", "You stand in front of the entrance to the estate. The gates are open, however there are armed guards checking each every guest going through.\nYou'll clearly need an invitation to pass.", Vector(None,Some("suit and invitation", "west"), Some("chef's outfit","north")))
+  val frontGate = new Area("Front Gate", "You stand in front of the entrance to the estate. The gates are open, however there are armed guards checking each every guest going through.\nYou'll clearly need an invitation to pass.", Vector(None,Some("suit and invitation", "west")))
   val northFence = new Area("North Fence", "You are surrounded by trees. The only thing that stands out is a drainpipe.\nIt looks like you could use it to climb up the wall of the building.",Vector(None))
   val westFence = new Area("West Fence", "There is nothing but forest here, but when you look towards the fence you notice a small hole in it.\n\nSmall, but big enough for a person to fit through.",Vector(None))
   val southFence = new Area("South Fence", "You are surrounded by trees, but a small shack amongst them catches your eye.",Vector(None))
