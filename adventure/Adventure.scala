@@ -165,7 +165,7 @@ class Adventure {
     s"Good job. You have successfully completed your mission.\n\nYour score: $score points."
     else if (this.currentTime == this.timeLimit)
     "Time's up. You failed to kill your target tonight."
-    else if (target.uhoh && target.isFine)
+    else if (target.playerInSameSquare && target.isFine)
     "You were caught by your target. You should have killed him as soon as he noticed you."
     else if (busted)
     "You were caught! You might be an assassin, but it's not like you can just kill a child to silence them."
