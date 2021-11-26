@@ -9,7 +9,7 @@ class Child (val name: String, world: Adventure) {
 
 
 
-  /** Returns a square that neighbors the NPC's current location in the given direction. */
+  /** Returns the NPC's current neighbors. */
   def neighbors = this.location.neighbors
 
   val routine: Vector[Area] = Vector(world.childroom, world.playroom)
