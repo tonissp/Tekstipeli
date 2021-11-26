@@ -12,11 +12,11 @@ class Item(val name: String, val description: String) {
   /** Returns a short textual representation of the item (its name, that is). */
   override def toString = this.name
 }
-
+  /** Defines an object that can be examined but not picked up. */
 class Examinable(val name: String, val description: String) {
   override def toString: String = this.name
 }
-
+  /** Defines an object you can listen in on. */
 class Eavesroppable(val targets: String, val speech: String) {
   override def toString: String = this.targets
 }
