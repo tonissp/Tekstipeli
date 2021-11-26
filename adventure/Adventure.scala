@@ -43,7 +43,7 @@ class Adventure {
   val ballroomNorth = new Area("Ballroom", "The end of the ballroom. On one side is a bar, on the other the WC. There are guests all around you.",Vector(None))
   val ballroomSouth = new Area("Ballroom", "An enormous ballroom which continues on and on. There are guests all around you.",Vector(None))
   val entrance = new Area("Entrance", "The main entrance of the building. To the west is a locked door, to the east the ballroom and main party.", Vector(None,Some("fancy key", "west")))
-  val hallway = new Area("Hallway", "A hallway leaging to a staircase, the kitchen, and the main entrance. You best hurry up or hide yourself before anybody notices you.\nAlthough you can hear some chefs talking about something interesting in the next room over.", Vector(None,Some("suit and invitation", "east")))
+  val hallway = new Area("Hallway", "A hallway leaging to a staircase, the kitchen, and the main entrance. You best hurry up or hide yourself before anybody notices you.\nAlthough you can hear some chefs talking about something interesting in the next room over.", Vector(None,Some("suit and invitation", "east"),Some("chef's outfit","north")))
   val stairs = new Area("Staircase", "A cicrular stairway leading up and down.",Vector(None))
   val wineCellar = new Area("Wine Cellar", "You see wine barrels all around you. Behind some of the barrels appears to be a door.",Vector(None,Some("fancy key","south")))
   val guestRoom = new Area("Guestroom", "A fancy looking room with sofas, a fireplace and a painting of some old dude. You don't know who he is supposed to be.\n There is a staircase at leading down.",Vector(None,Some("crowbar","east")))
