@@ -113,6 +113,14 @@ class Player(startingArea: Area, adventure: Adventure) {
       this.location.addItem(new Item("poisoned wine", "Quite lethal."))
       "You have posioned the wine. Now to wait for someone to drink it."
     }
+    else if (this.possessions.contains("poison") && this.possessions.contains("wine glass")) {
+      adventure.score += 40
+      this.possessions.remove("wine glass")
+      this.possessions.remove("poison")
+      this.location.addItem(new Item("poisoned wine", "Quite lethal."))
+      this.get("poisoned wine")
+      "You have posioned the wine. Now to wait for someone to drink it."
+    }
     else if (this.possessions.contains("poison") && (this.location == adventure.bar || this.location == adventure.kitchen)) {
       adventure.score -= 300
       this.possessions.remove("poison")
@@ -174,10 +182,20 @@ class Player(startingArea: Area, adventure: Adventure) {
       * Drown has the requirements that you are in a bathroom and the target is there with you and he is alive
       * Kill has the requirements that you are alone with the target and he is alive.*/
 
-  def killlll: String = {
-  adventure.score += 400
+  def waterRooms = this.location==adventure.toiletRoom || this.location==adventure.toilet2nd || this.location==adventure.bathroom
+
+  def drown: String = {
+  adventure.score += 600
   adventure.target.killT()
-  "You walk up the bastard and snap his neck. Nobody will ever hear form him again.\nA fancy looking key falls out of his pocket as he drops dead."
+  "You push the target's head down into the toilet and wait for him to drown. What a way to go!"
+  }
+
+  def killlll: String = {
+    if(waterRooms) drown else {
+    adventure.score += 400
+    adventure.target.killT()
+    "You walk up the bastard and snap his neck. Nobody will ever hear form him again.\nA fancy looking key falls out of his pocket as he drops dead."
+    }
   }
 
   def killll = if(!this.adventure.guests.areas.contains(this.location)) killlll else "You don't want to do this with all the people around."
@@ -186,18 +204,4 @@ class Player(startingArea: Area, adventure: Adventure) {
 
   def kill = if(this.location == adventure.target.location) killl else "You don't see your target here."
 
-
-  def waterRooms = this.location==adventure.toiletRoom || this.location==adventure.toilet2nd || this.location==adventure.bathroom
-
-  def drownnnn: String = {
-  adventure.score += 600
-  adventure.target.killT()
-  "You push the target's head down into the toilet and wait for him to drown. What a way to go!"
-  }
-
-  def drownnn = if(waterRooms) drownnnn else "You don't exatcly see how that's possible here."
-
-  def drownn = if(adventure.target.isFine) drownnn else "Your target is already dead. Get out of here instead of playing around. I know we made a good game and you don't want this to end, but just stop. \nI recommend trying another playthrough if you want to kill some more."
-
-  def drown: String = if(this.location == adventure.target.location) drownn else "You don't see your target here."
 }
