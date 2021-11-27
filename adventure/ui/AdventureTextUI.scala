@@ -10,8 +10,7 @@ import scala.math.Ordering.String
   * and can be run to start up a user interface that operates in the text console.
   * @see [[AdventureGUI]] */
 object AdventureTextUI extends App {
-
-  private val game = new Adventure
+ private val game = new Adventure
   private val player = game.player
   this.run()
 

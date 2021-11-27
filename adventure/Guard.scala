@@ -24,7 +24,7 @@ class Guard(val name: String, world: Adventure, item: Item) {
   def isFine = !this.isOoC
 
   /** Used to define the walking pattern of the guard */
-  
+
   val routine: Vector[Area] = Vector(world.yardEntrance, world.thickGardenEast, world.thickGardenWest, world.frontYard)
 
 

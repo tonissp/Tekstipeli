@@ -45,7 +45,7 @@ class Target(val name: String, world: Adventure, item: Item) {
 
   /** These lines define the possible routes the target walks along. */
 
-  val routine1 = Vector(world.bedroom, world.study, world.bedroom)
+  val routine1 = Vector(world.bedroom, world.study, world.bedroom, world. bathroom)
   val routine2 = Vector(world.study, world.guestRoom, world.stairs, world.wineCellar, world.wineCellar, world.stairs, world.hallway, world.entrance, world.ballroomSouth, world.ballroomNorth, world.ballroomSouth, world.ballroomNorth)
   val routine3 = Vector(world.wc, world.toiletRoom, world.toiletRoom, world.toiletRoom, world.wc)
   val routine4 = Vector(world.ballroomSouth, world.ballroomNorth, world.ballroomSouth, world. entrance, world.hallway, world.stairs, world.guestRoom, world.study)
@@ -62,7 +62,7 @@ class Target(val name: String, world: Adventure, item: Item) {
   /** Returns the message displayed when in the same area as the target. */
   def sameSpot = if(!this.world.guests.areas.contains(this.location) && this.isFine) {
   playerInSameSquare = true
-  "'What the hell are you doing here!'"
+  "'What the hell are you doing here!'\n\nThe target shouts at you as you come into contact with him."
   } else if(!this.isFine) "There's your target laying dead. Good job. Now you just need to get out of here." else "You see your target. All that you need now is a moment alone with him."
 
   override def toString: String = sameSpot

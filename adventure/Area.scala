@@ -47,7 +47,7 @@ class Area(var name: String, var description: String, var requirements: Vector[O
     * value has the form "DESCRIPTION\n\nExits available: DIRECTIONS SEPARATED BY SPACES".
     * The directions are listed in an arbitrary order. */
   def fullDescription = {
-    val exitList = "\n\nExits available: " + this.neighbors.keys.mkString(" ")
+    val exitList = "\n\nExits available: " + this.neighbors.keys.mkString(", ")
     val itemList = "\nYou see here: " + this.areaItemsKey.keys.mkString(", ") + "\n\nExits available: " + this.neighbors.keys.mkString(" ")
 
     if(areaItemsKey.isEmpty) this.description + exitList else this.description + itemList

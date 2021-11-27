@@ -1,4 +1,4 @@
-   package o1.adventure
+  package o1.adventure
 
   import o1.adventure.ui.AdventureTextUI.game
 
@@ -141,7 +141,7 @@ class Adventure {
   /** The number of turns that have passed since the start of the game. */
     var currentTime = 0
   /** The maximum number of turns that this adventure game allows before time runs out. */
-    val timeLimit = 49
+    val timeLimit = 61
 
     def currenTime = s"The current time is ${19+this.currentTime/12}:" + "%02d".format((this.currentTime*5)%60) + "\n"
 
@@ -154,7 +154,7 @@ class Adventure {
 
   /** Returns a message that is to be displayed to the player at the beginning of the game. */
   def welcomeMessage = "Hello agent Teekkari. You are our most skilled assassin. Sad, I know. I wouldn't rely on you if things were better in our agency, but alas." +
-    "\n\nAnyways, I digress. The situation is simple: You have a target and your mission is to eliminate him. Your deadline is 23:00. Get to work." +
+    "\n\nAnyways, I digress. The situation is simple: You have a target and your mission is to eliminate him. Your deadline is at midnight. Get to work." +
     "\n\nAvailable commands: go (direction), wait, quit, inventory, get (item), drop (item), examine (item), incapacitate, eliminate, overhear(people), inspect(something), poison, download, lockpick" +
     "\nFeel free to use any of the tools in the car, but try to play through the game multiple times and find different methods to complete your mission." +
     "\nIt is 100% possible to beat the game without using any of the starting items, but there are certain approaches which are only available to you with these items." +
@@ -205,19 +205,19 @@ class Adventure {
     if (outcomeReport.isDefined) {
       this.currentTime += 1
       if(headGuard.isFine) headGuard.location = headGuard.routine(currentTime%4)
-      if(target.isFine) {target.location = if(currentTime < 15) {
-        target.routine1(currentTime%3)}
-        else if(currentTime<27) {
-        target.routine2(currentTime-15)}
+      if(target.isFine) {target.location = if(currentTime < 20) {
+        target.routine1(currentTime%4)}
         else if(currentTime<32) {
-        target.routine3(currentTime-27)}
-        else if(currentTime<40) {
-        target.routine4(currentTime-32)}
+        target.routine2(currentTime-20)}
+        else if(currentTime<37) {
+        target.routine3(currentTime-32)}
+        else if(currentTime<45) {
+        target.routine4(currentTime-37)}
         else bedroom }
       if(target.isFine) {
         if(target.location == this.wineCellar && wineCellar.contains("poisoned wine")) target.targetGet("poisoned wine")
         else if(target.location == this.wineCellar && wineCellar.contains("wine glass")) target.targetGet("wine glass") }
-      if(currentTime == 26 && target.targetItems.contains("poisoned wine")) {
+      if(currentTime == 31 && target.targetItems.contains("poisoned wine")) {
         target.publicDeath() }
       child.location = child.routine((currentTime/2)%2)
       if(target.isFine && (target.playerInSameSquare || crossPath)) player.quit()
