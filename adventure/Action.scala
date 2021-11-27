@@ -25,7 +25,6 @@ class Action(input: String) {
     case "examine"   => Some(actor.examine(this.modifiers))
     case "incapacitate" => Some(actor.incapacitate)
     case "eliminate" => Some(actor.kill)
-    case "drown" => Some(actor.drown)
     case "overhear" => Some(actor.eavesdrop(this.modifiers))
     case "inspect" => Some(actor.inspect(this.modifiers))
     case "poison" => Some(actor.poisonWine)
@@ -34,3 +33,4 @@ class Action(input: String) {
     case "quit"      => Some(actor.quit())
     case other       => None
   }
+}
