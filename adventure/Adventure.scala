@@ -127,7 +127,7 @@ class Adventure {
 
 
   /** The character that the player controls in the game. */
-    val player = new Player(toiletRoom, this)
+    val player = new Player(car, this)
 
     /** Determines if the child has seen the player. This will lose the game for the player. */
     def busted = (child.location == player.location)
