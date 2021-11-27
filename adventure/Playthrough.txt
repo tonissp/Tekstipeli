@@ -1,0 +1,84 @@
+Cold hard professional
+_____________
+
+head out
+head north
+head up
+wait
+wait
+wait
+head up
+head east
+wait
+wait
+head south
+eliminate
+take fancy key
+head west
+head west
+head down
+head down
+head south
+head backward
+head backward
+head up
+head outside
+head east
+head to the car
+
+_________________
+
+
+Poison Bobby
+_________________
+take lockpick
+head out
+head south
+head inside
+head down
+head forward
+head up
+take poison
+head down
+head forward
+lockpick
+head forward
+poison wine glass
+head south
+head backward
+head backward
+head up
+head outside
+head east
+wait (approx 8 times)
+head to the car
+
+______________________
+
+
+Hacker man
+_______________________
+
+take memory stick
+wait x13
+head out
+head north
+head up
+wait
+head up
+head east
+head south
+head west
+download
+take fancy key
+head west
+head down
+head down
+head south
+head backward
+head backward
+head up
+head east
+head to the car
+
+But there are still more ways to play the game!
