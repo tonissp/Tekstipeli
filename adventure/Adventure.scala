@@ -1,4 +1,4 @@
-  package o1.adventure
+   package o1.adventure
 
   import o1.adventure.ui.AdventureTextUI.game
 
@@ -51,7 +51,7 @@ class Adventure {
   val guestRoom = new Area("Guestroom", "A fancy looking room with couches, a fireplace and a painting of some old dude. You don't know who he is supposed to be.\n There is a staircase leading down.",Vector(Some("crowbar","east")))
   val hallway2nd = new Area("Hallway", "To the west is a toilet and to the east a children's playroom.",Vector())
   val toilet2nd = new Area("Toilet", "A simple looking room with a toilet and a sink.",Vector())
-  val playroom = new Area("Playroom", "A children's playroom. Presumably for any children visitors may have.",Vector())
+  val playroom = new Area("Playroom", "A children's playroom. Presumably for any children visitors may have. You see a pipe leading down, but using it seems a bit scary now that you think about it.",Vector())
   val childroom = new Area("Bedroom", "This bedroom appears to belong to a small child. Presumably the target's son. You see two doors in opposing directions and a pipe next to the window leading down.\n\nYou tremble at the thought of using that pipe.",Vector())
   val bathroom = new Area("Bathroom", "The bathroom has a shower, a bath, a sink and a toilet. Everything in here looks fairly new.",Vector())
   val bedroom = new Area("Bedroom", "The target's bedroom. It has surprisingly simple furnishing and looks quite plain. All in all, an average looking bedroom where nothing really stands out.",Vector())
@@ -92,7 +92,7 @@ class Adventure {
   hallway2nd.setNeighbors(Vector( "west" -> toilet2nd, "east" -> playroom, "south" -> guestRoom))
   toilet2nd.setNeighbors(Vector( "east" -> hallway2nd))
   playroom.setNeighbors(Vector( "east" -> childroom, "south" -> guestRoom, "west" -> hallway2nd))
-  childroom.setNeighbors(Vector( "east" -> bathroom, "west" -> playroom, "down"->pipe))
+  childroom.setNeighbors(Vector( "east" -> bathroom, "west" -> playroom))
   bathroom.setNeighbors(Vector( "south" -> bedroom, "west" -> childroom))
   bedroom.setNeighbors(Vector( "north" -> bathroom, "west" -> study))
   study.setNeighbors(Vector( "east" -> bedroom, "west" -> guestRoom))
@@ -103,10 +103,11 @@ class Adventure {
   car.addItem(new Item("suit and invitation", "A useful set which will let you blend in and sneak into the party."))
   car.addItem(new Item("chef's outfit", "Sometimes you just got to work behind the scenes."))
   car.addItem(new Item("memory stick", "An empty memory stick. It might be useful."))
-  car.addItem(new Item("lockpick", "A lockpick which would be quite useful in the right situation."))
+  car.addItem(new Item("lockpick", "A lockpick which could be quite useful in the right situation."))
+  study.addItem(new Item("fancy key", "An engraved key. What could this be for?"))
   storageShed.addItem(new Item("poison", "Quite a large amount of rat poison. Enough to kill a man."))
-  storageShed.addItem(new Item("crowbar", "It's a small battery cell. Looks new."))
-  wineCellar.addItem(new Item("wine glass", "useful"))
+  storageShed.addItem(new Item("crowbar", "An old and rusty crowbar. You could probably use this somewhere."))
+  wineCellar.addItem(new Item("wine glass", "Seems useless on the job. Not like you're going to get drunk."))
   hallway.addEavesdroppable(new Eavesroppable("chefs", "'No, no, no. You don't have to pour any wine for the master. He's got his own favourite wine down in the cellar.\nIt's the only thing he ever drinks.\n\nAnd don't even think about touching it. He'll cut off your hands if you do.'"))
   ballroomNorth.addEavesdroppable(new Eavesroppable("guests", "'Apparently the owner is going to come down here somewhere between 9 and 10PM.'"))
   wineCellar.addExaminable(new Examinable("barrel", "An expensive looking barrel of wine. This is not the kind of thing a good man can afford."))
@@ -126,7 +127,7 @@ class Adventure {
 
 
   /** The character that the player controls in the game. */
-    val player = new Player(car, this)
+    val player = new Player(toiletRoom, this)
 
     /** Determines if the child has seen the player. This will lose the game for the player. */
     def busted = (child.location == player.location)
@@ -154,7 +155,7 @@ class Adventure {
   /** Returns a message that is to be displayed to the player at the beginning of the game. */
   def welcomeMessage = "Hello agent Teekkari. You are our most skilled assassin. Sad, I know. I wouldn't rely on you if things were better in our agency, but alas." +
     "\n\nAnyways, I digress. The situation is simple: You have a target and your mission is to eliminate him. Your deadline is 23:00. Get to work." +
-    "\n\nAvailable commands: go (direction), wait, quit, inventory, get (item), drop (item), examine (item), incapacitate, eliminate, drown, overhear(people), inspect(something), poison, download, lockpick" +
+    "\n\nAvailable commands: go (direction), wait, quit, inventory, get (item), drop (item), examine (item), incapacitate, eliminate, overhear(people), inspect(something), poison, download, lockpick" +
     "\nFeel free to use any of the tools in the car, but try to play through the game multiple times and find different methods to complete your mission." +
     "\nIt is 100% possible to beat the game without using any of the starting items, but there are certain approaches which are only available to you with these items." +
     "\nTry different approaches to get a highscore."
@@ -169,12 +170,12 @@ class Adventure {
     s"Good job. You have successfully completed your mission.\n\nYour score: $score points."
     else if (this.currentTime == this.timeLimit)
     "Time's up. You failed to kill your target tonight."
+    else if(crossPath)
+    "You crossed path with someone you shouldn't have in a place where you shouldn't be. Better luck next time."
     else if (target.playerInSameSquare && target.isFine)
     "You were caught by your target. You should have killed him as soon as he noticed you."
     else if (busted)
     "You were caught! You might be an assassin, but it's not like you can just kill a child to silence them."
-    else if(crossPath)
-    "You crossed path with someone you shouldn't have in a place where you shouldn't be. Better luck next time."
     else
     "Quitter!"
   }
@@ -219,10 +220,10 @@ class Adventure {
       if(currentTime == 26 && target.targetItems.contains("poisoned wine")) {
         target.publicDeath() }
       child.location = child.routine((currentTime/2)%2)
+      if(target.isFine && (target.playerInSameSquare || crossPath)) player.quit()
     }
-  if ((target.tPrevLoc == player.location && player.pPrevLoc == target.location && !guests.areas.contains(target.location)) || (child.cPrevLoc == player.location && player.pPrevLoc == child.location)) {
+  if ((target.tPrevLoc == player.location && player.pPrevLoc == target.location && !guests.areas.contains(target.location) && target.isFine) || (child.cPrevLoc == player.location && player.pPrevLoc == child.location)) {
     crossPath = true
-    player.quit()
   }
   score -= 10
   outcomeReport.getOrElse("Unknown command: \"" + command + "\".")
